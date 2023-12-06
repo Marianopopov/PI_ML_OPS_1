@@ -1,5 +1,5 @@
 fastapi
 pandas
 uvicorn
-sckit-learn
+scikit-learn
 nltk
