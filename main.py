@@ -16,7 +16,7 @@ def bienvenida():
 def PlayTimeGenre(genero: str):
     try:
         
-        function1 = pd.read_csv('./Datasets/function1.csv')
+        function1 = pd.read_csv('./Datasets/function1.csv.gz', compression='gzip')
         genre_df = function1[function1['genres'].apply(lambda x: genero in x)]
         grouped_df = genre_df.groupby('year')['playtime_forever'].sum()
         max_playtime_year = grouped_df.idxmax()
