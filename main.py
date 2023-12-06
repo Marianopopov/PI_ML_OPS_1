@@ -53,16 +53,9 @@ def UsersRecommend(year: str):
         filtered_df = function3[(function3['recommend'] == 1) & (function3['sentiment_analysis'].isin([1, 2])) & (function3['year'] == year)]
         game_recommendations = filtered_df.groupby('app_name')['recommend'].count().sort_values(ascending=False)
         top_3_games = game_recommendations.head(3)
-        #result = [{"Puesto {}: {}".format(i + 1, juego)} for i, juego in enumerate(top_3_games)]
-        result_list = [
-            {
-                "loc": ["app_name", i],
-                "msg": "Puesto {}: {}".format(i + 1, game),
-                "type": "string"
-            } for i, game in enumerate(top_3_games)
-        ]
+        result = [{"Puesto {}: {}".format(i + 1, juego)} for i, juego in enumerate(top_3_games)]
         
-        return result_list
+        return result
 
     except Exception as e:
         return {"Error": str(e)}
