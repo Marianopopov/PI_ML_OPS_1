@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = FastAPI()
 
@@ -95,3 +96,45 @@ def sentiment_analysis(year: int):
     except Exception as e:
         return {"Error": str(e)}
 
+
+@app.get('/sentiment_analysis/ {año}')
+def recomendacion_juego(df, input_item_id, num_recommendations=5):
+    try:
+            df = pd.read_csv (r'Datasets\function3.csv.gz', compression='gzip', usecols=['user_id','item_id','sentiment_analysis','recommend','app_name'])
+            # Filtrar el DataFrame para obtener solo las filas relacionadas con el juego de entrada
+            input_item = df[df['item_id'] == input_item_id]
+
+            if input_item.empty:
+                return "El ID de producto no se encuentra en el conjunto de datos."
+
+            # Extraer el usuario y sus recomendaciones para ese juego
+            user_item_matrix = df.pivot_table(index='user_id', columns='item_id', values='recommend', fill_value=0)
+
+            # Calcular la similitud coseno entre el juego de entrada y todos los demás juegos
+            similarity_scores = cosine_similarity(user_item_matrix.T)
+
+            # Obtener las puntuaciones de similitud para el juego de entrada
+            input_item_scores = similarity_scores[input_item_id]
+
+            # Obtener los índices de los juegos más similares (excluyendo el juego de entrada)
+            similar_items_indices = input_item_scores.argsort()[:-1][-num_recommendations:]
+
+            # Obtener los IDs y nombres de los juegos más similares
+            similar_items = user_item_matrix.columns[similar_items_indices]
+
+            # Obtener nombres de juegos correspondientes a los IDs
+            game_names_df = df[df['item_id'].isin(similar_items)][['item_id', 'app_name']]
+
+            # Fusionar los DataFrames para obtener nombres correspondientes a los IDs
+            merged_df = pd.merge(pd.DataFrame(similar_items, columns=['item_id']), game_names_df, on='item_id')
+
+            # Agrupar juegos recomendados por ID
+            grouped_recommendations = merged_df.groupby(['item_id', 'app_name']).size().reset_index(name='counts')
+
+            # Imprimir las recomendaciones de juegos agrupadas por ID
+            print(f"Juegos recomendados similares al juego con ID: {input_item_id}")
+            for idx, (item_id, game_name, count) in enumerate(zip(grouped_recommendations['item_id'], grouped_recommendations['app_name'], grouped_recommendations['counts']), start=1):
+                print(f"{idx}. Juego ID: {item_id}, Name: {game_name}")
+    
+    except Exception as e:
+        return {"Error": str(e)}
