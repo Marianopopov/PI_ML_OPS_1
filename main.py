@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 app = FastAPI()
 
@@ -97,44 +99,52 @@ def sentiment_analysis(year: int):
         return {"Error": str(e)}
 
 
-@app.get('/sentiment_analysis/ {año}')
-def recomendacion_juego(df, input_item_id, num_recommendations=5):
+@app.get('/recomendacion_juego/ {app_name}')
+def recomendacion_juego(nombre_juego: str, num_recomendaciones=5):
     try:
-            df = pd.read_csv (r'Datasets\function3.csv.gz', compression='gzip', usecols=['user_id','item_id','sentiment_analysis','recommend','app_name'])
-            # Filtrar el DataFrame para obtener solo las filas relacionadas con el juego de entrada
-            input_item = df[df['item_id'] == input_item_id]
+        # Cargar el conjunto de datos
+        df = pd.read_csv('./Datasets/function3.csv.gz', compression='gzip').sample(frac=0.7, random_state=42)
+        df['review'].fillna('', inplace=True)
 
-            if input_item.empty:
-                return "El ID de producto no se encuentra en el conjunto de datos."
+        # Representación vectorial con TF-IDF
+        vectorizer = TfidfVectorizer(stop_words='english')
+        tfidf_matrix = vectorizer.fit_transform(df['review'])
 
-            # Extraer el usuario y sus recomendaciones para ese juego
-            user_item_matrix = df.pivot_table(index='user_id', columns='item_id', values='recommend', fill_value=0)
+        # Asegurarse de que la matriz contenga solo valores numéricos
+        tfidf_matrix = tfidf_matrix.astype(float)
 
-            # Calcular la similitud coseno entre el juego de entrada y todos los demás juegos
-            similarity_scores = cosine_similarity(user_item_matrix.T)
+        # Calcular la similitud de coseno
+        cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-            # Obtener las puntuaciones de similitud para el juego de entrada
-            input_item_scores = similarity_scores[input_item_id]
+        # Crear un DataFrame de similitud
+        cosine_sim_df = pd.DataFrame(cosine_sim, index=df.index, columns=df.index)
 
-            # Obtener los índices de los juegos más similares (excluyendo el juego de entrada)
-            similar_items_indices = input_item_scores.argsort()[:-1][-num_recommendations:]
+        # Obtener el ID del juego dado el nombre
+        juego_id = df[df['app_name'] == nombre_juego].index[0]
 
-            # Obtener los IDs y nombres de los juegos más similares
-            similar_items = user_item_matrix.columns[similar_items_indices]
+        # Obtener la fila correspondiente al juego dado
+        juego_fila = cosine_sim_df.loc[juego_id]
 
-            # Obtener nombres de juegos correspondientes a los IDs
-            game_names_df = df[df['item_id'].isin(similar_items)][['item_id', 'app_name']]
+        # Ordenar los juegos por similitud (en orden descendente)
+        juegos_similares = juego_fila.sort_values(ascending=False)
 
-            # Fusionar los DataFrames para obtener nombres correspondientes a los IDs
-            merged_df = pd.merge(pd.DataFrame(similar_items, columns=['item_id']), game_names_df, on='item_id')
+        # Excluir el juego dado de la lista de recomendaciones
+        juegos_recomendados = juegos_similares.drop(juego_id)
 
-            # Agrupar juegos recomendados por ID
-            grouped_recommendations = merged_df.groupby(['item_id', 'app_name']).size().reset_index(name='counts')
+        # Tomar los primeros 'num_recomendaciones' juegos
+        juegos_recomendados = juegos_recomendados.head(num_recomendaciones)
 
-            # Imprimir las recomendaciones de juegos agrupadas por ID
-            print(f"Juegos recomendados similares al juego con ID: {input_item_id}")
-            for idx, (item_id, game_name, count) in enumerate(zip(grouped_recommendations['item_id'], grouped_recommendations['app_name'], grouped_recommendations['counts']), start=1):
-                print(f"{idx}. Juego ID: {item_id}, Name: {game_name}")
-    
+        # Obtener los nombres de los juegos recomendados como lista
+        nombres_recomendados = df.loc[juegos_recomendados.index, 'app_name'].tolist()
+
+        # Crear un diccionario de recomendaciones
+        recomendaciones = {}
+        for i, juego_id in enumerate(juegos_recomendados.index, start=1):
+            juego_nombre = df.loc[juego_id, 'app_name']
+            recomendacion = {f"{i}": juego_nombre}
+            recomendaciones.append(recomendacion)
+
+        return recomendaciones
+                
     except Exception as e:
         return {"Error": str(e)}
