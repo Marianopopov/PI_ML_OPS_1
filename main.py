@@ -36,7 +36,12 @@ def UserForGenre(genre):
             user_max = consulta_final.loc[genre].nombre
             diccionario = ast.literal_eval(consulta_final.loc[genre].year)
             diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
-            return f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas: {[str(diccionario)]}"
+
+            # Construir la cadena con saltos de línea para las horas jugadas
+            horas_jugadas_str = "\n".join(f"{key}: {value}" for key, value in diccionario.items())
+
+            result = f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas:\n{horas_jugadas_str}"
+            return result
 
         
     except Exception as e:
