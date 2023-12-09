@@ -38,7 +38,6 @@ def UserForGenre(genre):
             diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
             return f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas: {[str(diccionario)]}"
 
-            return result
         
     except Exception as e:
         return {"Error":str(e)}
