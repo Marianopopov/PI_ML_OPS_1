@@ -3,4 +3,3 @@ pandas
 uvicorn
 scikit-learn
 nltk
-ast
