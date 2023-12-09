@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+import ast
 
 
 app = FastAPI()
@@ -29,21 +30,16 @@ def PlayTimeGenre(genero: str):
 
 @app.get('/UserForGenre/ {genero}')
 
-def UserForGenre(genero):
+def UserForGenre(genre):
     try:
-        function2 = pd.read_csv('./Datasets/function1.csv')
-        usuario_agrupado = function2[['user_id','playtime_forever','year']].groupby(['user_id','year']).sum()
-        usuario_agrupado_1 = usuario_agrupado['playtime_forever'].idxmax()
-        genero = function2[function2['genres'].apply(lambda x: genero in x)]
-        df_usuario_genero = function2[(function2['user_id'] == usuario_agrupado_1 [0])]
-        poranio = df_usuario_genero.groupby('year')[['playtime_forever']].sum().reset_index().rename(columns={'year':'Año', 'playtime_forever': 'Horas jugadas'}).to_dict(orient='records')
-        dicc = {
-            'Uruario con mas horas jugadas por genero': usuario_agrupado_1 [0],
-            'Horas Jugadas': poranio
-        }
+            consulta_final = pd.read_csv('02_nombres_max.csv.gz', index_col=['index'])
+            user_max = consulta_final.loc[genre].nombre
+            diccionario = ast.literal_eval(consulta_final.loc[genre].year)
+            diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
+            return f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas: {[str(diccionario)]}"
+
+            return result
         
-        return dicc
-    
     except Exception as e:
         return {"Error":str(e)}
 
