@@ -98,51 +98,43 @@ def sentiment_analysis(year: int):
 
 
 @app.get('/recomendacion_juego/ {app_name}')
-def recomendacion_juego(nombre_juego: str, num_recomendaciones=5):
+def recomendacion_juego_v2(item_id :int):
     try:
-        # Cargar el conjunto de datos
-        df = pd.read_csv('./Datasets/function3.csv.gz', compression='gzip').sample(frac=0.1, random_state=42)
-        df['review'].fillna('', inplace=True)
+        consulta_06 = pd.read_csv('recomendacion_juego.csv.gz',compression='gzip')
+        
+        nombre_juego = consulta_06.set_index('item_id').loc[item_id].values[0].split(',')[0]
 
-        # Representación vectorial con TF-IDF
-        vectorizer = TfidfVectorizer(stop_words='english')
-        tfidf_matrix = vectorizer.fit_transform(df['review'])
+        #Eliminaremos las stopwords
 
-        # Asegurarse de que la matriz contenga solo valores numéricos
-        tfidf_matrix = tfidf_matrix.astype(float)
+        stop_words_steams = ['aaaaaa', 'ab', 'abbey','abe', 'abramenko']
+        stop = list(stopwords.words('english'))
+        stop += stop_words_steams
 
-        # Calcular la similitud de coseno
-        cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-        # Crear un DataFrame de similitud
-        cosine_sim_df = pd.DataFrame(cosine_sim, index=df.index, columns=df.index)
+        tf = TfidfVectorizer(stop_words=stop, token_pattern=r'\b[a-zA-Z]\w+\b' )
 
-        # Obtener el ID del juego dado el nombre
-        juego_id = df[df['app_name'] == nombre_juego].index[0]
+        data_vector = tf.fit_transform(consulta_06['features'])
 
-        # Obtener la fila correspondiente al juego dado
-        juego_fila = cosine_sim_df.loc[juego_id]
+        data_vector_df = pd.DataFrame(data_vector.toarray(), index=consulta_06['item_id'], columns = tf.get_feature_names_out())
+            
+        vector_similitud_coseno = cosine_similarity(data_vector_df.values)
+        
+        cos_sim_df = pd.DataFrame(vector_similitud_coseno, index=data_vector_df.index, columns=data_vector_df.index)
+        
+        ##top5
+        juegos_similares = cos_sim_df.loc[item_id].nlargest(6)
 
-        # Ordenar los juegos por similitud (en orden descendente)
-        juegos_similares = juego_fila.sort_values(ascending=False)
-
-        # Excluir el juego dado de la lista de recomendaciones
-        juegos_recomendados = juegos_similares.drop(juego_id)
-
-        # Tomar los primeros 'num_recomendaciones' juegos
-        juegos_recomendados = juegos_recomendados.head(num_recomendaciones)
-
-        # Obtener los nombres de los juegos recomendados como lista
-        nombres_recomendados = df.loc[juegos_recomendados.index, 'app_name'].tolist()
-
-        # Crear un diccionario de recomendaciones
-        recomendaciones = {}
-        for i, juego_id in enumerate(juegos_recomendados.index, start=1):
-            juego_nombre = df.loc[juego_id, 'app_name']
-            recomendacion = {f"{i}": juego_nombre}
-            recomendaciones.append(recomendacion)
-
-        return recomendaciones
-                
+        top5 = juegos_similares.iloc[1:6]
+        
+        
+        resultado = consulta_06.set_index('item_id').loc[top5.index]['features'].apply(lambda x: x.split(',')[0]).values
+        print(f"Los juegos similares a {nombre_juego} son :\n")
+        for name in resultado:
+            print("\n",name)
+            
+        resultado = consulta_06.set_index('item_id').loc[top5.index]['features'].apply(lambda x: x.split(',')[0]).values
+            
+        return list(resultado)
+  
     except Exception as e:
         return {"Error": str(e)}
