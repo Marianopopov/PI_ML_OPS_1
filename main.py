@@ -3,6 +3,12 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import ast
+import nltk
+from nltk.corpus import stopwords
+
+from sklearn.metrics.pairwise import cosine_similarity
+
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
 app = FastAPI()
