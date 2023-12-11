@@ -101,7 +101,7 @@ def sentiment_analysis(year: int):
 def recomendacion_juego(nombre_juego: str, num_recomendaciones=5):
     try:
         # Cargar el conjunto de datos
-        df = pd.read_csv('./Datasets/function3.csv.gz', compression='gzip').sample(frac=0.7, random_state=42)
+        df = pd.read_csv('./Datasets/function3.csv.gz', compression='gzip').sample(frac=0.1, random_state=42)
         df['review'].fillna('', inplace=True)
 
         # Representación vectorial con TF-IDF
