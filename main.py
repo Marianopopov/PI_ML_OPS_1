@@ -67,7 +67,7 @@ def UsersRecommend(year: int):
 
 def UsersNotRecommend(year: int):
     try:
-        function3 = pd.read_csv('./Datasets/function3.csv')
+        function3 = pd.read_csv('./Datasets/function3.csv.gz', compression='gzip')
         filtered_df = function3[(function3['recommend'] == 0) & (function3['sentiment_analysis'].isin([0, -1])) & (function3['year'] == year)]
         game_not_recommendations = filtered_df.groupby('app_name')['recommend'].count().sort_values(ascending=False)
         top_3_not_recommended = game_not_recommendations.head(3).to_dict()
