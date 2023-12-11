@@ -14,15 +14,18 @@ def bienvenida():
 
 @app.get('/PlayTimeGenre/ {genero}')
 
-def PlayTimeGenre(genero: str):
+def PlayTimeGenre( genero : str ):
     try:
-        
-        function1 = pd.read_csv('./Datasets/function1.csv.gz', compression='gzip')
-        genre_df = function1[function1['genres'].apply(lambda x: genero in x)]
-        grouped_df = genre_df.groupby('year')['playtime_forever'].sum()
-        max_playtime_year = grouped_df.idxmax()
-        result = {"Año de lanzamiento con más horas jugadas para Género X": str(max_playtime_year)}
-        return result
+        consulta_final = pd.read_csv('result_df.csv.gz')
+        # Filtrar el DataFrame por el género especificado
+        genero_df = consulta_final[consulta_final['genres'] == genero]
+
+        # Obtener el año con más horas jugadas para el género dado
+        max_year = genero_df['max_year'].iloc[0]
+
+        # Retornar el resultado en un formato deseado
+        #return {"Año de lanzamiento con más horas jugadas para Género {}:".format(genero): max_year}
+        return "Año de lanzamiento con más horas jugadas para Género {}: {}".format(genero, int(max_year))
     
     except Exception as e:
         return {"Error":str(e)}
@@ -36,12 +39,7 @@ def UserForGenre(genre):
             user_max = consulta_final.loc[genre].nombre
             diccionario = ast.literal_eval(consulta_final.loc[genre].year)
             diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
-
-            # Cada elemento de las horas jugadas es un diccionario
-            horas_jugadas_dicts = [{key: value} for key, value in diccionario.items()]
-
-            result = f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas:\n{horas_jugadas_dicts}"
-            return result
+            return f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas: {[str(diccionario)]}"
 
         
     except Exception as e:
