@@ -6,10 +6,10 @@ import ast
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
-
 from sklearn.metrics.pairwise import cosine_similarity
-
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.neighbors import NearestNeighbors
+
 
 
 app = FastAPI()
@@ -23,7 +23,7 @@ def bienvenida():
 
 def PlayTimeGenre( genero : str ):
     try:
-        consulta_final = pd.read_csv('./Datasets/merged/result_df.csv.gz')
+        consulta_final = pd.read_csv('./Datasets/merged/playtime_genre.csv.gz')
         # Filtrar el DataFrame por el género especificado
         genero_df = consulta_final[consulta_final['genres'] == genero]
 
@@ -42,7 +42,7 @@ def PlayTimeGenre( genero : str ):
 
 def UserForGenre(genre):
     try:
-            consulta_final = pd.read_csv('./Datasets/merged/02_nombres_max.csv.gz', index_col=['index'])
+            consulta_final = pd.read_csv('./Datasets/merged/user_genre.csv.gz', index_col=['index'])
             user_max = consulta_final.loc[genre].nombre
             diccionario = ast.literal_eval(consulta_final.loc[genre].year)
             diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
@@ -105,7 +105,7 @@ def sentiment_analysis(year: int):
 
 
 @app.get('/recomendacion_juego/ {app_name}')
-def recomendacion_juego_v2(item_id :int):
+def recomendacion_juego(item_id :int):
     try:
         consulta_06 = pd.read_csv('./Datasets/merged/recomendacion_juego.csv.gz',compression='gzip')
         
@@ -143,5 +143,43 @@ def recomendacion_juego_v2(item_id :int):
             
         return list(resultado)
   
+    except Exception as e:
+        return {"Error": str(e)}
+    
+    
+
+@app.get('/recomendacion_usuario/ {user_id}')
+def recomendacion_usuario(usuario_id, steam):
+    try:
+        steam = pd.read_csv (r'../Datasets/merged/function3.csv.gz', compression='gzip', usecols=['user_id','item_id','sentiment_analysis','recommend','app_name'])
+        # Filtrar el DataFrame para obtener las entradas del usuario específico
+        usuario_df = steam[steam['user_id'] == usuario_id]
+
+        if usuario_df.empty:
+            return f"No se encontraron datos para el usuario con ID {usuario_id}."
+
+        # Crear una matriz de usuario-juego para el modelo de vecinos más cercanos
+        matriz_usuario_juego = pd.pivot_table(steam, values='sentiment_analysis', index='user_id', columns='app_name', fill_value=0)
+
+        # Transponer la matriz para trabajar en el espacio de juegos
+        matriz_juego_usuario = matriz_usuario_juego.T
+
+        # Inicializar el modelo de vecinos más cercanos
+        modelo_vecinos = NearestNeighbors(metric='cosine', algorithm='brute')
+        modelo_vecinos.fit(matriz_juego_usuario)
+
+        # Encontrar vecinos más cercanos al juego específico
+        juego_interes = usuario_df['app_name'].iloc[0]
+        indice_juego = matriz_juego_usuario.index.get_loc(juego_interes)
+        distancias, indices = modelo_vecinos.kneighbors(matriz_juego_usuario.iloc[indice_juego, :].values.reshape(1, -1), n_neighbors=6)
+
+        # Construir la lista de juegos recomendados
+        juegos_recomendados = []
+        for i, indice_juego_recomendado in enumerate(indices.flatten()[1:]):  # Excluir al propio juego
+            juego_recomendado = matriz_juego_usuario.index[indice_juego_recomendado]
+            juegos_recomendados.append(juego_recomendado)
+
+        return juegos_recomendados
+
     except Exception as e:
         return {"Error": str(e)}
