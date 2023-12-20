@@ -35,7 +35,7 @@ def PlayTimeGenre( genero : str ):
 
 def UserForGenre(genre):
     try:
-            consulta_final = pd.read_csv('./Datasets/merged/01_nombres_max.csv.gz', index_col=['index'])
+            consulta_final = pd.read_csv('./Datasets/merged/user_genre.gz', index_col=['index'])
             user_max = consulta_final.loc[genre].nombre
             diccionario = ast.literal_eval(consulta_final.loc[genre].year)
             diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
