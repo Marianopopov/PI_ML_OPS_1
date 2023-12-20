@@ -23,7 +23,7 @@ def bienvenida():
 
 def PlayTimeGenre( genero : str ):
     try:
-        consulta_final = pd.read_csv('./Datasets/merged/playtime_genre.csv.gz')
+        consulta_final = pd.read_csv('./Datasets/merged/playtime_genre.gz')
         genero_df = consulta_final[consulta_final['genres'] == genero]
         max_year = genero_df['max_year'].iloc[0]
         return "Año de lanzamiento con más horas jugadas para Género {}: {}".format(genero, int(max_year))
