@@ -24,7 +24,11 @@
 
 
 
-# Funcionalidades Principales:
+# CARACTERÍSTICAS:
+
+    El proyecto aborda el análisis de datos de la plataforma Steam mediante técnicas de Machine Learning. Ofrece funcionalidades como la identificación de patrones de juego a lo largo del tiempo, recomendaciones personalizadas y análisis de sentimientos en reseñas de usuarios. La estructura del proyecto, implementado en FastAPI y desplegado en Render, facilita su ejecución y exploración. Con una variedad de tecnologías aplicadas y una invitación a la colaboración, el proyecto demuestra una combinación efectiva de habilidades en ciencia de datos y machine learning.
+
+    Estas son sus funcionalidades:
 
 - <u>Año con Mayor Tiempo Jugado por Género</u>: <br>
     Descubre cuál fue el año con mayor tiempo jugado para un género específico. Obtén información valiosa sobre las preferencias de los jugadores a lo largo del tiempo.
@@ -51,19 +55,19 @@
     Utiliza los diversos endpoints proporcionados para acceder a la información específica que necesitas. Consulta la documentación detallada para obtener instrucciones sobre cada función.
 
     * <u>def PlayTimeGenre( genero : str )</u>: Debe devolver año con mas horas jugadas para dicho género. <br>
-        Ejemplo de retorno: {"Año de lanzamiento con más horas jugadas para Género X" : 2013}
+        
 
     * <u>def UserForGenre( genero : str )</u>: Debe devolver el usuario que acumula más horas jugadas para el género dado y una lista de la acumulación de horas jugadas por año <br>
-        Ejemplo de retorno: {"Usuario con más horas jugadas para Género X" : us213ndjss09sdf, "Horas jugadas":[{Año: 2013, Horas: 203}, {Año: 2012, Horas: 100}, {Año: 2011, Horas: 23}]}
+        
 
     * <u>def UsersRecommend( año : int )</u>: Devuelve el top 3 de juegos MÁS recomendados por usuarios para el año dado. (reviews.recommend = True y comentarios positivos/neutrales)<br>
-        Ejemplo de retorno: [{"Puesto 1" : X}, {"Puesto 2" : Y},{"Puesto 3" : Z}]
+        
 
     * <u>def UsersNotRecommend( año : int )</u>: Devuelve el top 3 de juegos MENOS recomendados por usuarios para el año dado. (reviews.recommend = False y comentarios negativos)<br>
-        Ejemplo de retorno: [{"Puesto 1" : X}, {"Puesto 2" : Y},{"Puesto 3" : Z}]
+        
 
     * <u>def sentiment_analysis( año : int )</u>: Según el año de lanzamiento, se devuelve una lista con la cantidad de registros de reseñas de usuarios que se encuentren categorizados con un análisis de sentimiento.<br>
-        Ejemplo de retorno: {Negative = 182, Neutral = 120, Positive = 278}
+        
     
     * <u>def recomendacion_juego( id de producto )</u>: Ingresando el id de producto, deberíamos recibir una lista con 5 juegos recomendados similares al ingresado.<br>
 
