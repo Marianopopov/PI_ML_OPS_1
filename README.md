@@ -84,6 +84,8 @@ Estas son sus funcionalidades:
 
 ¡Contribuye al proyecto! Si tienes ideas para nuevas funcionalidades o mejoras, no dudes en colaborar. 
 
+![Texto Alternativo](img/FASTAPI.png)!
+
 # Cómo Ejecutar Localmente
 
 Si deseas ejecutar este proyecto en tu máquina local, sigue estos pasos:
@@ -113,6 +115,10 @@ Si deseas ejecutar este proyecto en tu máquina local, sigue estos pasos:
 - main: Este archivo implementa una API con FastAPI que proporciona consultas a una base de datos relacionada con la plataforma Steam.
 
 - requirements: Contiene dependecias del proyecto, para poder hacer deploy en render.
+
+
+
+<img src="img/ESTRUCTURA.png" alt="Texto Alternativo" width="20%">
 
 
 # VIDEO 
