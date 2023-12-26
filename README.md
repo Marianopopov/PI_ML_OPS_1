@@ -124,7 +124,7 @@ Si deseas ejecutar este proyecto en tu máquina local, sigue estos pasos:
 
 # VIDEO 
 
-[LINK PRESENTACION]() <br>
+[LINK PRESENTACION](https://www.youtube.com/watch?v=YuWnoE1yYZ8) <br>
 [Link a proyecto en Render](https://pi-ml-ops-u2y3.onrender.com/docs)
 
 
