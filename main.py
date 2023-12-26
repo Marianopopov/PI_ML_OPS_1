@@ -35,12 +35,20 @@ def PlayTimeGenre( genero : str ):
 
 def UserForGenre(genre):
     try:
-            consulta_final = pd.read_csv('./Datasets/merged/user_genre.gz', index_col=['index'])
-            user_max = consulta_final.loc[genre].nombre
-            diccionario = ast.literal_eval(consulta_final.loc[genre].year)
-            diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
-            return f"Usuario con más horas jugadas para Género {genre}: {user_max},\n Horas jugadas: {[str(diccionario)]}"
+        consulta_final = pd.read_csv('../Datasets/merged/02_nombres_max.csv.gz', index_col=['index'])
+        user_max = consulta_final.loc[genre].nombre
+        diccionario = ast.literal_eval(consulta_final.loc[genre].year)
+        diccionario['Horas_Jugadas'] = diccionario.pop('playtime_forever')
 
+        result_list = [
+            {
+                'Usuario': user_max,
+                'Horas_Jugadas': diccionario['Horas_Jugadas'],
+                'Detalle_Horas': diccionario,
+            }
+        ]
+
+        return result_list
         
     except Exception as e:
         return {"Error":str(e)}
