@@ -50,7 +50,9 @@ Estas son sus funcionalidades:
     Experimenta con recomendaciones avanzadas utilizando un modelo de ML entrenado. Descubre juegos que podrían ajustarse perfectamente a tus preferencias de juego.
 
 # Cómo Empezar
-    Dentro del entorno de FastAPI, encontrarás endpoints listos para interactuar con ellos. Este entorno está implementado y desplegado en Render, lo que garantiza una    experiencia de desarrollo eficiente y acceso fácil a las funcionalidades que ofrece. 
+    Dentro del entorno de FastAPI, encontrarás endpoints listos para interactuar con ellos. Este entorno está
+     implementado y desplegado en Render, lo que garantiza una    experiencia de desarrollo eficiente y 
+     acceso fácil a las funcionalidades que ofrece. 
 
 [Link a proyecto en Render](https://pi-ml-ops-u2y3.onrender.com/docs#/default/PlayTimeGenre_PlayTimeGenre___genero__get)
 
@@ -93,7 +95,8 @@ Si deseas ejecutar este proyecto en tu máquina local, sigue estos pasos:
 
     [http://localhost:8000/docs](http://localhost:8000/docs)
 
-        Esto abrirá la aplicación en tu máquina local. Asegúrate de que la aplicación esté en ejecución y que el puerto 8000 no esté siendo utilizado por otra aplicación.
+        Esto abrirá la aplicación en tu máquina local. Asegúrate de que la aplicación esté en ejecución y 
+        que el puerto 8000 no esté siendo utilizado por otra aplicación.
 
 
 
