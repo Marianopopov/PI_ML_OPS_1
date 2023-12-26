@@ -130,7 +130,7 @@ Si deseas ejecutar este proyecto en tu máquina local, sigue estos pasos:
 
 Mariano Andrés Popov
 
-- [Linkedin:](https://www.linkedin.com/in/mariano-popov-3a4570290/)
+- [Linkedin](https://www.linkedin.com/in/mariano-popov-3a4570290/)
 - Correo: mariano.popov@gmail.com
 
 
