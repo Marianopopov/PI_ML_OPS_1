@@ -26,9 +26,13 @@
 
 # CARACTERÍSTICAS:
 
-    El proyecto aborda el análisis de datos de la plataforma Steam mediante técnicas de Machine Learning. Ofrece funcionalidades como la identificación de patrones de juego a lo largo del tiempo, recomendaciones personalizadas y análisis de sentimientos en reseñas de usuarios. La estructura del proyecto, implementado en FastAPI y desplegado en Render, facilita su ejecución y exploración. Con una variedad de tecnologías aplicadas y una invitación a la colaboración, el proyecto demuestra una combinación efectiva de habilidades en ciencia de datos y machine learning.
+    El proyecto aborda el análisis de datos de la plataforma Steam mediante técnicas de Machine Learning. Ofrece funcionalidades 
+    como la identificación de patrones de juego a lo largo del tiempo, recomendaciones personalizadas y análisis de sentimientos 
+    en reseñas de usuarios. La estructura del proyecto, implementado en FastAPI y desplegado en Render, facilita su ejecución y 
+    exploración. Con una variedad de tecnologías aplicadas y una invitación a la colaboración, el proyecto demuestra una 
+    combinación efectiva de habilidades en ciencia de datos y machine learning.
 
-    Estas son sus funcionalidades:
+Estas son sus funcionalidades:
 
 - <u>Año con Mayor Tiempo Jugado por Género</u>: <br>
     Descubre cuál fue el año con mayor tiempo jugado para un género específico. Obtén información valiosa sobre las preferencias de los jugadores a lo largo del tiempo.
