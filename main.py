@@ -43,8 +43,7 @@ def UserForGenre(genre):
         result_list = [
             {
                 'Usuario': user_max,
-                'Horas_Jugadas': diccionario['Horas_Jugadas'],
-                'Detalle_Horas': diccionario,
+                'Horas_Jugadas': diccionario['Horas_Jugadas']
             }
         ]
 
