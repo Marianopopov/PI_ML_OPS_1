@@ -22,6 +22,7 @@
 4. [CONTACTO](#contacto)
 5. [TECNOLOGIAS APLICADAS](#tecnologias-aplicadas)
 
+[Link a proyecto en Render](https://pi-ml-ops-u2y3.onrender.com/docs)
 
 
 # CARACTERÍSTICAS:
@@ -54,7 +55,7 @@ Estas son sus funcionalidades:
      implementado y desplegado en Render, lo que garantiza una    experiencia de desarrollo eficiente y 
      acceso fácil a las funcionalidades que ofrece. 
 
-[Link a proyecto en Render](https://pi-ml-ops-u2y3.onrender.com/docs#/default/PlayTimeGenre_PlayTimeGenre___genero__get)
+[Link a proyecto en Render](https://pi-ml-ops-u2y3.onrender.com/docs)
 
 
 - Uso de Endpoints: <br>
@@ -124,6 +125,7 @@ Si deseas ejecutar este proyecto en tu máquina local, sigue estos pasos:
 # VIDEO 
 
 [LINK PRESENTACION]()
+[Link a proyecto en Render](https://pi-ml-ops-u2y3.onrender.com/docs)
 
 
 # CONTACTO
