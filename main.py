@@ -10,7 +10,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.neighbors import NearestNeighbors
 
-
+"""
+Este módulo sirve como punto de entrada principal para la aplicación FastAPI.
+Define las rutas API y la lógica para manejar solicitudes.
+"""
 
 app = FastAPI()
 
@@ -22,6 +25,7 @@ def bienvenida():
 @app.get('/PlayTimeGenre/ {genero}')
 
 def PlayTimeGenre( genero : str ):
+    '''Debe devolver año con mas horas jugadas para dicho género.'''
     try:
         consulta_final = pd.read_csv('./Datasets/merged/playtime_genre.gz')
         genero_df = consulta_final[consulta_final['genres'] == genero]
@@ -34,6 +38,7 @@ def PlayTimeGenre( genero : str ):
 @app.get('/UserForGenre/ {genero}')
 
 def UserForGenre(genre):
+    '''Debe devolver el usuario que acumula más horas jugadas para el género dado y una lista de la acumulación de horas jugadas por año'''
     try:
         consulta_final = pd.read_csv('./Datasets/merged/02_nombres_max.csv.gz', index_col=['index'])
         user_max = consulta_final.loc[genre].nombre
@@ -46,7 +51,7 @@ def UserForGenre(genre):
                 'Horas_Jugadas': diccionario['Horas_Jugadas']
             }
         ]
-
+        
         return result_list
         
     except Exception as e:
@@ -57,6 +62,8 @@ def UserForGenre(genre):
 @app.get('/UsersRecommend/ {año}')
 
 def UsersRecommend(year: int):
+    '''Devuelve el top 3 de juegos MÁS recomendados por usuarios para el año dado. 
+        (reviews.recommend = True y comentarios positivos/neutrales)'''
     try:
         function3 = pd.read_csv('./Datasets/merged/function3.csv.gz', compression='gzip')
         filtered_df = function3[(function3['recommend'] == 1) & (function3['sentiment_analysis'].isin([1, 2])) & (function3['year'] == year)]
@@ -73,6 +80,8 @@ def UsersRecommend(year: int):
 @app.get('/UsersNotRecommend/ {año}')
 
 def UsersNotRecommend(year: int):
+    '''Devuelve el top 3 de juegos MENOS recomendados por usuarios para el año dado. 
+        (reviews.recommend = False y comentarios negativos)'''
     try:
         function3 = pd.read_csv('./Datasets/merged/function3.csv.gz', compression='gzip')
         filtered_df = function3[(function3['recommend'] == 0) & (function3['sentiment_analysis'].isin([0, -1])) & (function3['year'] == year)]
@@ -87,7 +96,10 @@ def UsersNotRecommend(year: int):
     
     
 @app.get('/sentiment_analysis/ {año}')
+
 def sentiment_analysis(year: int):
+    '''Según el año de lanzamiento, se devuelve una lista con la cantidad de registros 
+        de reseñas de usuarios que se encuentren categorizados con un análisis de sentimiento.'''
     try:
         function3 = pd.read_csv('./Datasets/merged/function3.csv.gz', compression='gzip')
         filtered_df = function3[function3['year'] == year]
@@ -105,7 +117,9 @@ def sentiment_analysis(year: int):
 
 
 @app.get('/recomendacion_juego/ {app_name}')
+
 def recomendacion_juego(item_id :int):
+    '''Ingresando el id de producto, deberíamos recibir una lista con 5 juegos recomendados similares al ingresado.'''
     try:
         consulta_06 = pd.read_csv('./Datasets/merged/recomendacion_juego.csv.gz',compression='gzip')
         nombre_juego = consulta_06.set_index('item_id').loc[item_id].values[0].split(',')[0]
